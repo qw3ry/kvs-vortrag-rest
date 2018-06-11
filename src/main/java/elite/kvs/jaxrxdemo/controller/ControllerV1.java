@@ -11,7 +11,9 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -46,31 +48,18 @@ public class ControllerV1 {
 
   @GET
   @Path("courses")
-  public Response getCourses(
-      @QueryParam("name") String name,
-      @QueryParam("semester") Integer semester,
-      @QueryParam("credits") Integer credits,
-      @QueryParam("uni") Integer uniId,
-      @QueryParam("prof") Integer profId) {
-    return Response.ok(data.courses().filter(
-        name == null ? null : c -> name.equals(c.name),
-        semester == null ? null : c -> semester.equals(c.semester),
-        credits == null ? null : c -> credits.equals(c.credits),
-        uniId == null ? null : c -> uniId.equals(c.uniId),
-        profId == null ? null : c -> profId.equals(c.profId)
-    ).collect(Collectors.toList())).build();
+  public Response getCourses(@Context UriInfo uriInfo) {
+    return Response.ok(data.courses()
+        .filter(Util.reflectionFilter(Course.class, uriInfo.getQueryParameters()))
+        .collect(Collectors.toList())).build();
   }
 
   @GET
   @Path("professors")
-  public Response getProfs(
-      @QueryParam("name") String name,
-      @QueryParam("uni") Integer uni
-  ) {
-    return Response.ok(data.profs().filter(
-        name == null ? null : p -> name.equals(p.name),
-        uni == null ? null : p -> uni.equals(p.uniId)
-    ).collect(Collectors.toList())).build();
+  public Response getProfs(@Context UriInfo uriInfo) {
+    return Response.ok(data.profs()
+        .filter(Util.reflectionFilter(Professor.class, uriInfo.getQueryParameters()))
+        .collect(Collectors.toList())).build();
   }
 
   @GET
@@ -81,7 +70,9 @@ public class ControllerV1 {
 
   @GET
   @Path("professors/add")
-  public Response addProfessor(@QueryParam("name") String name, @QueryParam("uni") Integer uniId) {
+  public Response addProfessor(@Context UriInfo uriInfo) {
+    String name = uriInfo.getQueryParameters().getFirst("name");
+    String uniId = uriInfo.getQueryParameters().getFirst("uniId");
     if (name == null || uniId == null) {
       throw new BadRequestException();
     }
@@ -92,28 +83,28 @@ public class ControllerV1 {
 
   @GET
   @Path("courses/add")
-  public Response addCourse(
-      @QueryParam("name") String name,
-      @QueryParam("semester") Integer semester,
-      @QueryParam("credits") Integer credits,
-      @QueryParam("desc") String description,
-      @QueryParam("prof") Integer profId,
-      @QueryParam("uni") Integer uniId) {
+  public Response addCourse(@Context UriInfo uriInfo) {
+    String name = uriInfo.getQueryParameters().getFirst("name");
+    String semester = uriInfo.getQueryParameters().getFirst("semester");
+    String credits = uriInfo.getQueryParameters().getFirst("credits");
+    String description = uriInfo.getQueryParameters().getFirst("description");
+    String profId = uriInfo.getQueryParameters().getFirst("profId");
+    String uniId = uriInfo.getQueryParameters().getFirst("uniId");
     if (name == null || semester == null || credits == null || description == null || profId == null
         || uniId == null) {
       throw new BadRequestException();
     }
-    Course c = new Course(name, semester, credits, description, Identifiable.of(uniId),
-        Identifiable.of(profId));
+    Course c = new Course(name, Integer.valueOf(semester), Integer.valueOf(credits), description,
+        Identifiable.of(uniId), Identifiable.of(profId));
     data.courses().put(c);
     return Response.ok(c).build();
   }
 
   @GET
   @Path("unis/add")
-  public Response addUni(
-      @QueryParam("shortName") String shortName,
-      @QueryParam("name") String name) {
+  public Response addUni(@Context UriInfo uriInfo){
+    String shortName = uriInfo.getQueryParameters().getFirst("shortName");
+    String name = uriInfo.getQueryParameters().getFirst("name");
     if (shortName == null || name == null) {
       throw new BadRequestException();
     }

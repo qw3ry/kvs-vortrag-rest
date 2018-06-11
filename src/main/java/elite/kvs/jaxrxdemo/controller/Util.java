@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import elite.kvs.jaxrxdemo.model.Identifiable;
 import elite.kvs.jaxrxdemo.model.LinkedObject;
+
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,27 +25,27 @@ class Util {
 
   /**
    * Filter any object by its member values
+   *
    * @param clazz the class type to filter
    * @param filter the map of the values to check for equality
    * @param <T> the type that should be filtered
    * @return a predicate that can be used for filtering
    */
   static <T> Predicate<T> reflectionFilter(Class<T> clazz, MultivaluedMap<String, String> filter) {
-    Stream<Field> fields = Arrays.stream(clazz.getFields())
-        .filter(field -> filter.containsKey(field.getName()));
-    return t -> fields.noneMatch(field -> {
-      try {
-        field.setAccessible(true);
-        return !filter.containsKey(field.getName()) ||
-            !field.get(t).toString().equals(filter.getFirst(field.getName()));
-      } catch (IllegalAccessException e) {
-        throw new RuntimeException(e);
-      }
-    });
+    return t -> Arrays.stream(clazz.getFields()).filter(f -> filter.containsKey(f.getName()))
+        .noneMatch(field -> {
+          try {
+            return !filter.containsKey(field.getName()) ||
+                !field.get(t).toString().equals(filter.getFirst(field.getName()));
+          } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+          }
+        });
   }
 
   /**
    * Reduce the object to certain fields for serialization
+   *
    * @param o the object to reduce
    * @param fields the fields to filter
    * @return the map containing only the fields that are filtered for
@@ -55,6 +56,7 @@ class Util {
 
   /**
    * prepare a collection for serialization
+   *
    * @param coll the collection
    * @param apiVersion the version of the api used
    * @param info the uri info object
@@ -64,12 +66,13 @@ class Util {
   static <T extends Identifiable> LinkedObject<Collection<LinkedObject<Map<String, Object>>>> prepareLinkedCollection(
       Collection<T> coll, String apiVersion, UriInfo info) {
     Pagination pag = new Pagination(info, coll.size());
-    return Links.linkCollection(pag.paginate(coll.stream()), apiVersion, info.getPath(), pag,
+    return Links.linkCollection(pag.paginate(coll.stream()), apiVersion, '/' + info.getPath(), pag,
         coll.size(), o -> filterFields(o, info.getQueryParameters().get("fields")));
   }
 
   /**
    * prepare a collection for serialization
+   *
    * @param collection the collection
    * @param info the uri info object
    * @param <T> the type of the collection elements
@@ -101,7 +104,7 @@ class Fields {
     ObjectMapper m = new ObjectMapper();
     Map<String, Object> map = m.convertValue(o, new TypeReference<Map<String, Object>>() {
     });
-    return fields == null? map : filterFieldsInMap(map, fields);
+    return fields == null ? map : filterFieldsInMap(map, fields);
   }
 
   private static <T> Map<String, T> filterFieldsInMap(Map<String, T> map,
