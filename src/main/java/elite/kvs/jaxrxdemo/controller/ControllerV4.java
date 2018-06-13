@@ -77,8 +77,7 @@ public class ControllerV4 {
   @GET
   @Path("unis")
   public Response getUnis(@Context UriInfo uriInfo) {
-    throw new RuntimeException();
-    //return Response.ok(Util.prepareLinkedCollection(data.unis().all(), "v4", uriInfo)).build();
+    return Response.ok(Util.prepareLinkedCollection(data.unis().all(), "v4", uriInfo)).build();
   }
 
 }

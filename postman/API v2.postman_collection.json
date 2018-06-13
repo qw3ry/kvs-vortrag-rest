@@ -1,0 +1,112 @@
+{
+	"info": {
+		"_postman_id": "04c3237f-22a8-47f7-b9f5-3ea4cdf9725d",
+		"name": "API v2",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Add Prof",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "f92207e4-c261-442c-b725-29c141bf25f5",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Set ID\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.globals.set(\"bauer_2\", jsonData.id);",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"name\": \"Bernhard Bauer\",\n  \"uniId\": {{aux_id}}\n}"
+				},
+				"url": {
+					"raw": "{{host}}/v2/professors",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"v2",
+						"professors"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ChangeProf",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"uniId\": {{lmu_id}}\n}"
+				},
+				"url": {
+					"raw": "{{host}}/v2/professors/{{knapp_id}}",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"v2",
+						"professors",
+						"{{knapp_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Prof",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json"
+					}
+				],
+				"body": {},
+				"url": {
+					"raw": "{{host}}/v2/professors/{{bauer_2}}",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"v2",
+						"professors",
+						"{{bauer_2}}"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

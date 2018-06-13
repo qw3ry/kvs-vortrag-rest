@@ -1,0 +1,131 @@
+{
+	"info": {
+		"_postman_id": "4b752581-bde3-4a20-8e9f-9e8d3cb8e7ee",
+		"name": "API v3",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Unis (name only)",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json"
+					},
+					{
+						"key": "",
+						"value": ""
+					}
+				],
+				"body": {},
+				"url": {
+					"raw": "{{host}}/v3/unis?fields=name",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"v3",
+						"unis"
+					],
+					"query": [
+						{
+							"key": "fields",
+							"value": "name"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Professors (name + uni)",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json"
+					},
+					{
+						"key": "",
+						"value": ""
+					}
+				],
+				"body": {},
+				"url": {
+					"raw": "{{host}}/v3/professors?fields=name&fields=uniId",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"v3",
+						"professors"
+					],
+					"query": [
+						{
+							"key": "fields",
+							"value": "name"
+						},
+						{
+							"key": "fields",
+							"value": "uniId"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Courses (aux, page2)",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json"
+					},
+					{
+						"key": "",
+						"value": ""
+					}
+				],
+				"body": {},
+				"url": {
+					"raw": "{{host}}/v3/courses?page=2&size=3&fields=credits&fields=name&uniId={{aux_id}}",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"v3",
+						"courses"
+					],
+					"query": [
+						{
+							"key": "page",
+							"value": "2"
+						},
+						{
+							"key": "size",
+							"value": "3"
+						},
+						{
+							"key": "fields",
+							"value": "credits"
+						},
+						{
+							"key": "fields",
+							"value": "name"
+						},
+						{
+							"key": "uniId",
+							"value": "{{aux_id}}"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

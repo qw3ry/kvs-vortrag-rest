@@ -1,0 +1,85 @@
+{
+	"info": {
+		"_postman_id": "c9537891-5808-4aea-8bd6-73b6d0044335",
+		"name": "API v1",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Add Prof",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "aa707a3a-0480-49dd-9fa2-f25792012372",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Set ID\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.globals.set(\"bauer_1\", jsonData.id);",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json"
+					},
+					{
+						"key": "",
+						"value": ""
+					}
+				],
+				"body": {},
+				"url": {
+					"raw": "{{host}}/v1/professors/add?name=Bernhard Bauer&uniId=0",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"v1",
+						"professors",
+						"add"
+					],
+					"query": [
+						{
+							"key": "name",
+							"value": "Bernhard Bauer"
+						},
+						{
+							"key": "uniId",
+							"value": "0"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "ec623962-457c-498a-a0af-f265805be8c5",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "b7fe0f73-5834-4b33-a8a1-e8f25d60c733",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
